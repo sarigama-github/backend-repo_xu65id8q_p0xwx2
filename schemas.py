@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, List
 
 # Example schemas (replace with your own):
 
@@ -38,11 +38,34 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
-# --------------------------------------------------
+# Real estate app schemas
 
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+class Property(BaseModel):
+    """
+    Real estate properties
+    Collection: "property"
+    """
+    title: str
+    description: str
+    address: str
+    city: str
+    state: str
+    country: str = "India"
+    price: float
+    bedrooms: int
+    bathrooms: float
+    area_sqft: int
+    images: List[str] = []
+    featured: bool = False
+    status: str = Field("For Sale", description="For Sale | For Rent | Sold")
+
+class Inquiry(BaseModel):
+    """
+    Contact/Inquiry submissions
+    Collection: "inquiry"
+    """
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    message: str
+    property_id: Optional[str] = Field(None, description="If inquiring about a specific property")
